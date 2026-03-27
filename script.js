@@ -445,6 +445,55 @@ function initLucideIcons() {
     if (window.lucide) lucide.createIcons();
 }
 
+const database = [
+        { name: "Kepunahan Massal", id: "kepunahan" },
+        { name: "Paleontology", id: "info-section" },
+        { name: "paleo", id: "paleo-history-section" },
+        { name: "Timeline", id: "timelineOverlay" },
+        { name: "Logs Emerald Nexus", id: "logs-system" }
+    ];
+
+const searchInput = document.getElementById('rider-search');
+    const suggestionBox = document.getElementById('suggestion-box');
+
+    // Fungsi Mencari Sugesti
+    searchInput.addEventListener('input', () => {
+        const input = searchInput.value.toLowerCase();
+        suggestionBox.innerHTML = '';
+        
+        if (input.length > 0) {
+            const filtered = database.filter(item => item.name.toLowerCase().includes(input));
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.innerHTML = item.name;
+                div.style.padding = "10px";
+                div.style.cursor = "pointer";
+                div.style.borderBottom = "1px solid rgba(80, 200, 120, 0.2)";
+                div.onmouseover = () => div.style.background = "rgba(80, 200, 120, 0.3)";
+                div.onmouseout = () => div.style.background = "transparent";
+                
+                // Jika diklik, langsung pindah ke ID
+                div.onclick = () => {
+                    document.getElementById(item.id).scrollIntoView({ behavior: 'smooth' });
+                    searchInput.value = item.name;
+                    suggestionBox.innerHTML = '';
+                };
+                suggestionBox.appendChild(div);
+            });
+        }
+    });
+
+    // Fungsi Tekan Enter untuk Pencarian Pertama yang Cocok
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const match = database.find(item => item.name.toLowerCase().includes(searchInput.value.toLowerCase()));
+            if (match) {
+                document.getElementById(match.id).scrollIntoView({ behavior: 'smooth' });
+                suggestionBox.innerHTML = '';
+            }
+        }
+    });
+
 // ... Masukkan Fungsi Utilities lainnya (showNotify, formatTime) di bawah sini ...
 // ==========================================
 // --- SAFE INITIALIZER (Anti-Stuck) ---
